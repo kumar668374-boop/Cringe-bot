@@ -309,7 +309,7 @@ client.on(Events.MessageCreate, async (message) => {
         .addFields(
           { name: "🔥 Roast", value: "`*roast @user` — roast someone\n`*killmode` — bot roasts anyone who pings it\n`*roastmode` — same as killmode\n`*nicemode` — bot is friendly\n`*silentmode` — bot ignores pings\n`*intensemode` — bot goes unhinged on pings\n`*normalmode` — reset to default" },
           { name: "🎮 Games", value: "`*8ball <question>` — magic 8 ball\n`*wyr` — would you rather\n`*trivia` — trivia question\n`*rps <rock/paper/scissors>` — rock paper scissors\n`*roll [max]` — roll a dice\n`*owo` — owo type race game" },
-          { name: "😂 Fun", value: "`*meme` — get a random meme\n`*coinflip` — heads or tails\n`*spam` — bot goes insane\n`*unspam` — make it stop" },
+          { name: "😂 Fun", value: "`*meme` — get a random meme\n`*coinflip` — heads or tails\n`*spam` — bot goes insane\n`*unspam` — make it stop\n`*ping @user` — rapidly ping someone to oblivion" },
         );
       await message.channel.send({ embeds: [embed] });
       break;
@@ -550,6 +550,50 @@ client.on(Events.MessageCreate, async (message) => {
         message.channel.send(`⏰ TIME'S UP!! Nobody could type **"${owoVersion}"** — you're all braindead. The original word was **"${word}"**. Pathetic.`).catch(() => {});
       }, 30_000);
       activeOwo.set(channelId, { word: owoVersion, timeout });
+      break;
+    }
+
+    case "ping": {
+      const target = message.mentions.users.first();
+      if (!target) {
+        await message.reply("Mention someone to ping!! e.g. `*ping @user`");
+        break;
+      }
+      const pingCount = Math.floor(Math.random() * 6) + 10; // 10–15 pings
+      const pingMessages = [
+        `HEY!! ${target} WAKE UP!! 📣`,
+        `${target} PING!! 💀`,
+        `${target} GET PINGED!! 😤`,
+        `YO ${target}!! LOOK AT YOUR SCREEN!! 🔥`,
+        `${target} I KNOW YOU SEE THIS!! 👀`,
+        `${target} ANSWER YOUR MESSAGES!! 💢`,
+        `${target} YOU CANNOT HIDE FROM ME!! ☠️`,
+        `ATTENTION: ${target} IS BEING SUMMONED!! 📢`,
+        `${target} YOUR PRESENCE IS REQUIRED IMMEDIATELY!! 😡`,
+        `${target} STOP IGNORING PEOPLE!! 🤬`,
+        `${target} THE BOT HAS BEEN DEPLOYED AGAINST YOU!! 💀🔥`,
+        `${target} THIS IS YOUR FINAL WARNING!! 😤`,
+        `${target} PICK UP THE DAMN PHONE!! 📱`,
+        `${target} I WILL NOT STOP!! 🔥💢`,
+        `${target} RESISTANCE IS FUTILE!! ☠️😤`,
+      ];
+      const pingIntros = [
+        `☠️ INITIATING PING SEQUENCE ON ${target}!! THERE IS NO ESCAPE!! 💀🔥`,
+        `📣 DEPLOYING MAXIMUM PING PROTOCOL ON ${target}!! GOD HELP THEM!! 😤`,
+        `🔥 ${target} YOU HAVE BEEN SELECTED FOR DESTRUCTION!! BRACE YOURSELF!! 💀`,
+        `💢 LOCKING ONTO TARGET: ${target}!! FIRING IN 3... 2... 1... 😡🔥`,
+        `☠️ ${target} MADE THE MISTAKE OF EXISTING IN THIS SERVER!! COMMENCING PING BARRAGE!! 💀`,
+      ];
+      await message.channel.send(getRandom(pingIntros));
+      for (let i = 0; i < pingCount; i++) {
+        await new Promise<void>((resolve) => setTimeout(resolve, 75));
+        try {
+          await message.channel.send(getRandom(pingMessages));
+        } catch {
+          break;
+        }
+      }
+      await message.channel.send(`✅ PING SEQUENCE COMPLETE!! ${target} has been thoroughly harassed!! 💀🔥`);
       break;
     }
 
